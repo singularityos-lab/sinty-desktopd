@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=dev.sinty.FingerprintDriver1
+Exec=/usr/libexec/sinty-desktopd
+User=root
