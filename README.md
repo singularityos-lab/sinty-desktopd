@@ -1,13 +1,15 @@
 # sinty-desktopd
 
 Writes the few system files the Singularity desktop changes on behalf of the
-person using it: the login screen settings and fingerprint reader drivers. It
+person using it, the login screen settings and fingerprint reader drivers, and
+reads the kernel log for the Logs app when the kernel restricts it. It
 starts on demand through D-Bus activation and runs no other program.
 
 ## Who may call it
 
 Root always. Otherwise polkit decides when it is on the bus, with the actions
-`dev.sinty.login-screen` and `dev.sinty.fprint-driver`. Without polkit, members
+`dev.sinty.login-screen`, `dev.sinty.fprint-driver` and
+`dev.sinty.logs.read-kernel`. Without polkit, members
 of `wheel`, `sudo` or `admin` are allowed. A refused caller gets
 `org.freedesktop.DBus.Error.AccessDenied`.
 
@@ -45,6 +47,14 @@ Libraries go to `/var/lib/singularity/fprint`, the device rule to
 running `fprintd` is stopped so the next request starts it with the driver.
 
 Errors: `dev.sinty.FingerprintDriver1.Error.Invalid`, `.NotFound`, `.Failed`.
+
+## dev.sinty.Logs1
+
+Object `/dev/sinty/Logs1`.
+
+| Member | Signature | |
+| --- | --- | --- |
+| `ReadKernel` | `() -> s` | the kernel ring buffer from `/dev/kmsg`, one `<priority>[seconds.micro] message` line per record |
 
 ## Usage
 

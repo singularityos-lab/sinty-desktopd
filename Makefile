@@ -22,6 +22,7 @@ install: static
 	install -Dm644 packaging/sinty-desktopd.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/sinty-desktopd.conf
 	install -Dm644 packaging/dev.sinty.LoginScreen1.service $(DESTDIR)$(PREFIX)/share/dbus-1/system-services/dev.sinty.LoginScreen1.service
 	install -Dm644 packaging/dev.sinty.FingerprintDriver1.service $(DESTDIR)$(PREFIX)/share/dbus-1/system-services/dev.sinty.FingerprintDriver1.service
+	install -Dm644 packaging/dev.sinty.Logs1.service $(DESTDIR)$(PREFIX)/share/dbus-1/system-services/dev.sinty.Logs1.service
 	install -Dm644 packaging/dev.sinty.desktopd.policy $(DESTDIR)$(PREFIX)/share/polkit-1/actions/dev.sinty.desktopd.policy
 
 clean:

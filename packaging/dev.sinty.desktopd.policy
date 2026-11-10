@@ -22,4 +22,13 @@
       <allow_active>auth_admin</allow_active>
     </defaults>
   </action>
+  <action id="dev.sinty.logs.read-kernel">
+    <description>Read the kernel log</description>
+    <message>Authentication is required to read the kernel log</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
 </policyconfig>
