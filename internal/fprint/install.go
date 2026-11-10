@@ -37,6 +37,18 @@ var (
 	idPattern   = regexp.MustCompile(`^[0-9a-f]{4}:[0-9a-f]{4}$`)
 )
 
+type kindError struct {
+	kind    error
+	message string
+}
+
+func (e kindError) Error() string        { return e.message }
+func (e kindError) Is(target error) bool { return target == e.kind }
+
+func failWith(kind error, format string, args ...interface{}) error {
+	return kindError{kind, fmt.Sprintf(format, args...)}
+}
+
 type Installer struct {
 	Base      string
 	UdevRules string
@@ -59,18 +71,18 @@ func New() *Installer {
 
 func (in *Installer) Lookup(id string) (*Driver, error) {
 	if !idPattern.MatchString(id) {
-		return nil, fmt.Errorf("%w: invalid device id %q", ErrInvalid, id)
+		return nil, failWith(ErrInvalid, "invalid device id %q", id)
 	}
 	for i := range in.Catalog {
 		if in.Catalog[i].ID == id {
 			d := &in.Catalog[i]
 			if d.Arch != "" && d.Arch != in.Arch {
-				return nil, fmt.Errorf("%w: this driver only runs on %s", ErrInvalid, d.Arch)
+				return nil, failWith(ErrInvalid, "this driver only runs on %s", d.Arch)
 			}
 			return d, nil
 		}
 	}
-	return nil, fmt.Errorf("%w: no driver is known for %s", ErrNotFound, id)
+	return nil, failWith(ErrNotFound, "no driver is known for %s", id)
 }
 
 func (in *Installer) manifest(id string) string {
@@ -323,7 +335,7 @@ func (in *Installer) Uninstall(id string) error {
 	}
 	data, err := os.ReadFile(in.manifest(id))
 	if err != nil {
-		return fmt.Errorf("%w: the driver for %s is not installed", ErrNotFound, id)
+		return failWith(ErrNotFound, "the driver for %s is not installed", id)
 	}
 	for _, p := range strings.Split(string(data), "\n") {
 		if p == "" || !in.owns(p) {

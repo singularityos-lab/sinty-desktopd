@@ -21,8 +21,13 @@ type Store struct {
 	Dir string
 }
 
+type invalidError string
+
+func (e invalidError) Error() string        { return string(e) }
+func (e invalidError) Is(target error) bool { return target == ErrInvalid }
+
 func invalid(format string, args ...interface{}) error {
-	return fmt.Errorf("%w: %s", ErrInvalid, fmt.Sprintf(format, args...))
+	return invalidError(fmt.Sprintf(format, args...))
 }
 
 func (s Store) target() string {

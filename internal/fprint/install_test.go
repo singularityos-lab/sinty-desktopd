@@ -88,9 +88,9 @@ func deb(t *testing.T, kind string, files map[string]string) []byte {
 
 var payload = map[string]string{
 	"./usr/lib/x86_64-linux-gnu/libfprint-2/tod-1/libtod-test.so": "tod library",
-	"./usr/lib/x86_64-linux-gnu/libhelper-test.so":                 "helper library",
-	"./lib/udev/rules.d/60-test.rules":                             "SUBSYSTEM==\"usb\"\n",
-	"./usr/share/doc/unrelated":                                    "ignored",
+	"./usr/lib/x86_64-linux-gnu/libhelper-test.so":                "helper library",
+	"./lib/udev/rules.d/60-test.rules":                            "SUBSYSTEM==\"usb\"\n",
+	"./usr/share/doc/unrelated":                                   "ignored",
 }
 
 func fixture(t *testing.T, kind string) (*Installer, *[]string) {
@@ -269,7 +269,7 @@ func TestServiceAuthorization(t *testing.T) {
 	if e := svc.Install(":1.9", "abcd:1234"); e == nil || e.Name != "org.freedesktop.DBus.Error.AccessDenied" {
 		t.Fatalf("Install = %v", e)
 	}
-	if e := svc.Install(":1.9", "nope"); e == nil || e.Name != Iface+".Error.Invalid" {
+	if e := svc.Install(":1.9", "nope"); e == nil || e.Name != Iface+".Error.Invalid" || e.Body[0] != `invalid device id "nope"` {
 		t.Fatalf("invalid id = %v", e)
 	}
 	if d.count != 1 {

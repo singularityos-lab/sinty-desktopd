@@ -148,7 +148,7 @@ func TestServiceAuthorization(t *testing.T) {
 		t.Fatalf("a refused call wrote %v", entries)
 	}
 	ok := NewService(Store{Dir: dir}, allow{})
-	if e := ok.SetBackgroundColor(":1.5", "nope"); e == nil || e.Name != Iface+".Error.Invalid" {
+	if e := ok.SetBackgroundColor(":1.5", "nope"); e == nil || e.Name != Iface+".Error.Invalid" || e.Body[0] != "invalid color" {
 		t.Fatalf("invalid color = %v", e)
 	}
 	if e := ok.Apply(":1.5", payload); e != nil {
